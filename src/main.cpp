@@ -35,6 +35,107 @@ int pulseWidth(int angle) {
   return analog_value;
 }
 
+bool setAngle(int servoID, int angle) {
+  if ((servoID >= 0) && (servoID <= 11)) {
+    if ((angle >= limits[servoID][0]) && (angle <= limits[servoID][1])) {
+      pwm.setPWM(servoID, 0, pulseWidth(angle));
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
+String getValue(String data, char separator, int index)
+{
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    String rawStr = Serial.readString();  //read until timeout
+    rawStr.trim();
+
+    int servoID = getValue(rawStr, ' ', 0).toInt();
+    int angle = getValue(rawStr, ' ', 1).toInt();
+
+    setAngle(servoID, angle);
+  }
+}
+
+void resetServos() {
+  setAngle(4, 0);
+  setAngle(5, 90);
+  setAngle(6, 0);
+  setAngle(7, 90);
+
+  delay(100);
+
+  setAngle(8, 20);
+  setAngle(9, 60);
+  setAngle(10, 10);
+  setAngle(11, 80);
+
+  delay(100);
+
+  setAngle(0, 10);
+  setAngle(1, 70);
+  setAngle(2, 20);
+  setAngle(3, 65);
+}
+
+void startRobot() {
+  setAngle(0, 90);
+  setAngle(1, 0);
+  setAngle(2, 90);
+  setAngle(3, 0);
+
+  delay(100);
+
+  setAngle(8, 40);
+  setAngle(9, 50);
+  setAngle(10, 30);
+  setAngle(11, 50);
+
+  delay(100);
+
+  setAngle(4, 50);
+  setAngle(5, 40);
+  setAngle(6, 50);
+  setAngle(7, 40);
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    String rawStr = Serial.readString();  //read until timeout
+    rawStr.trim();
+
+    if (rawStr == "start") {
+      startRobot();
+      debugMsg("-- Robot Started --------------------------------");
+    } else {
+      int servoID = getValue(rawStr, ' ', 0).toInt();
+      int angle = getValue(rawStr, ' ', 1).toInt();
+
+      setAngle(servoID, angle);
+    }
+
+
+  }
+}
+
 // Run once on setup
 void setup() {
   pwm.begin();
