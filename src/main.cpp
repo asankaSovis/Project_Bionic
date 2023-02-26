@@ -75,6 +75,25 @@ String getValue(String data, char separator, int index)
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
+void incrementServo(int count, int expectedServos [][2], int speed, int increment = 1) {
+  bool complete = false;
+
+  while (!(complete))
+  {
+    complete = true;
+    for (int i = 0; i < count; i++) {
+      if (servoValues[expectedServos[i][0]] > expectedServos[i][1]) {
+        setAngle(expectedServos[i][0], servoValues[expectedServos[i][0]] - 1);
+      } else if (servoValues[expectedServos[i][0]] < expectedServos[i][1]) {
+        setAngle(expectedServos[i][0], servoValues[expectedServos[i][0]] + 1);
+      }
+
+      complete = complete && (servoValues[expectedServos[i][0]] == expectedServos[i][1]);
+      delay(10);
+    }
+  }
+}
+
 void resetServos() {
   setAngle(4, 0);
   setAngle(5, 90);
@@ -142,10 +161,121 @@ void startRobot() {
 
   delay(1000);
 
-  setAngle(4, 50);
-  setAngle(5, 40);
-  setAngle(6, 50);
-  setAngle(7, 40);
+  setAngle(4, 60);
+  setAngle(5, 30);
+  setAngle(6, 60);
+  setAngle(7, 30);
+}
+
+void forwardRobot() {
+  setAngle(4, 30);
+  delay(100);
+  setAngle(0, 20);
+  delay(100);
+  setAngle(4, 60);
+  delay(200);
+
+  setAngle(5, 60);
+  delay(100);
+  setAngle(1, 20);
+  delay(100);
+  setAngle(5, 30);
+  delay(200);
+
+  int expectedServos1 [][2] = { {0, 80}, {1, 70} };
+  incrementServo(2, expectedServos1, 0, 10);
+  delay(200);
+
+  setAngle(7, 60);
+  delay(100);
+  setAngle(3, 55);
+  delay(100);
+  setAngle(7, 30);
+  delay(200);
+
+  setAngle(6, 30);
+  delay(100);
+  setAngle(2, 80);
+  delay(100);
+  setAngle(6, 60);
+  delay(200);
+
+  int expectedServos2 [][2] = { {2, 30}, {3, 15} };
+  incrementServo(2, expectedServos2, 0, 10);
+  delay(200);
+}
+
+void backwardRobot() {
+  setAngle(5, 60);
+  delay(100);
+  setAngle(1, 70);
+  delay(100);
+  setAngle(5, 30);
+  delay(200);
+
+  setAngle(4, 30);
+  delay(100);
+  setAngle(0, 80);
+  delay(100);
+  setAngle(4, 60);
+  delay(200);
+
+  int expectedServos1 [][2] = { {0, 20}, {1, 20} };
+  incrementServo(2, expectedServos1, 0, 10);
+  delay(200);
+
+  setAngle(6, 30);
+  delay(100);
+  setAngle(2, 30);
+  delay(100);
+  setAngle(6, 60);
+  delay(200);
+
+  setAngle(7, 60);
+  delay(100);
+  setAngle(3, 15);
+  delay(100);
+  setAngle(7, 30);
+  delay(200);
+
+  int expectedServos2 [][2] = { {2, 80}, {3, 55} };
+  incrementServo(2, expectedServos2, 0, 10);
+  delay(200);
+}
+
+void leftRobot() {
+  setAngle(5, 60);
+  delay(100);
+  setAngle(1, 70);
+  delay(100);
+  setAngle(5, 30);
+  delay(200);
+
+  setAngle(4, 30);
+  delay(100);
+  setAngle(0, 80);
+  delay(100);
+  setAngle(4, 60);
+  delay(200);
+
+
+  setAngle(6, 30);
+  delay(100);
+  setAngle(2, 30);
+  delay(100);
+  setAngle(6, 60);
+  delay(200);
+
+  setAngle(7, 60);
+  delay(100);
+  setAngle(3, 15);
+  delay(100);
+  setAngle(7, 30);
+  delay(200);
+
+  int expectedServos2 [][2] = { {2, 80}, {3, 55} };
+  incrementServo(2, expectedServos2, 0, 10);
+  delay(200);
 }
 
 void serialEvent() {
