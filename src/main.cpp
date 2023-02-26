@@ -15,7 +15,9 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40); // Servo at 0x40 I2
 // Defaults, do not change unless required
 #define MIN_PULSE_WIDTH 600
 #define MAX_PULSE_WIDTH 2600
-#define FREQUENCY 50
+#define FREQUENCY 100
+
+int movementCount = 0;
 
 // Defining the angular limits for each servo motor
 // NOTE: DO NOT CHANGE THESE AS IT CAN DAMAGE THE ROBOT!
@@ -50,7 +52,7 @@ bool setAngle(int servoID, int angle) {
     if ((angle >= limits[servoID][0]) && (angle <= limits[servoID][1])) {
       pwm.setPWM(servoID, 0, pulseWidth(angle));
       servoValues[servoID] = angle;
-      debugMsg("Servo " + String(servoID) + ": " + String(angle));
+      //debugMsg("Servo " + String(servoID) + ": " + String(angle));
       return true;
     }
   }
@@ -83,13 +85,13 @@ void incrementServo(int count, int expectedServos [][2], int speed, int incremen
     complete = true;
     for (int i = 0; i < count; i++) {
       if (servoValues[expectedServos[i][0]] > expectedServos[i][1]) {
-        setAngle(expectedServos[i][0], servoValues[expectedServos[i][0]] - 1);
+        setAngle(expectedServos[i][0], servoValues[expectedServos[i][0]] - increment);
       } else if (servoValues[expectedServos[i][0]] < expectedServos[i][1]) {
-        setAngle(expectedServos[i][0], servoValues[expectedServos[i][0]] + 1);
+        setAngle(expectedServos[i][0], servoValues[expectedServos[i][0]] + increment);
       }
 
       complete = complete && (servoValues[expectedServos[i][0]] == expectedServos[i][1]);
-      delay(10);
+      delay(speed);
     }
   }
 }
@@ -116,20 +118,9 @@ void resetServos() {
 }
 
 void stopRobot() {
-  int expectedValues [] = { 0, 90, 0, 90 };
-
-  while ((servoValues[4] != expectedValues[0]) ||(servoValues[5] != expectedValues[1]) || (servoValues[6] != expectedValues[2]) || (servoValues[7] != expectedValues[3]))
-  {
-    for (int i = 4; i < 8; i++) {
-      if (servoValues[i] > expectedValues[i - 4]) {
-        setAngle(i, servoValues[i] - 1);
-      } else if (servoValues[i] < expectedValues[i - 4]) {
-        setAngle(i, servoValues[i] + 1);
-      }
-
-      delay(10);
-    }
-  }
+  int count = 4;
+  int expectedServos [][2] = { {4, 0}, {5, 90}, {6, 0}, {7, 90} };
+  incrementServo(count, expectedServos, 10);
 
   delay(100);
 
@@ -147,10 +138,10 @@ void stopRobot() {
 }
 
 void startRobot() {
-  setAngle(0, 90);
-  setAngle(1, 0);
-  setAngle(2, 90);
-  setAngle(3, 0);
+  setAngle(0, 60);
+  setAngle(1, 20);
+  setAngle(2, 80);
+  setAngle(3, 20);
 
   delay(100);
 
@@ -243,38 +234,71 @@ void backwardRobot() {
   delay(200);
 }
 
-void leftRobot() {
-  setAngle(5, 60);
-  delay(100);
-  setAngle(1, 70);
-  delay(100);
-  setAngle(5, 30);
-  delay(200);
-
+void rightRobot() {
   setAngle(4, 30);
   delay(100);
-  setAngle(0, 80);
+  setAngle(0, 40);
   delay(100);
   setAngle(4, 60);
   delay(200);
 
+  setAngle(5, 60);
+  delay(100);
+  setAngle(1, 30);
+  delay(100);
+  setAngle(5, 30);
+  delay(200);
 
   setAngle(6, 30);
   delay(100);
-  setAngle(2, 30);
+  setAngle(2, 50);
   delay(100);
   setAngle(6, 60);
   delay(200);
 
   setAngle(7, 60);
   delay(100);
-  setAngle(3, 15);
+  setAngle(3, 25);
   delay(100);
   setAngle(7, 30);
   delay(200);
 
-  int expectedServos2 [][2] = { {2, 80}, {3, 55} };
-  incrementServo(2, expectedServos2, 0, 10);
+  int expectedServos [][2] = { {0, 60}, {1, 40}, {2, 60}, {3, 50} };
+  incrementServo(4, expectedServos, 0, 1);
+  delay(200);
+}
+
+void leftRobot() {
+  setAngle(4, 30);
+  delay(100);
+  setAngle(0, 60);
+  delay(100);
+  setAngle(4, 60);
+  delay(200);
+
+  setAngle(5, 60);
+  delay(100);
+  setAngle(1, 40);
+  delay(100);
+  setAngle(5, 30);
+  delay(200);
+
+  setAngle(6, 30);
+  delay(100);
+  setAngle(2, 60);
+  delay(100);
+  setAngle(6, 60);
+  delay(200);
+
+  setAngle(7, 60);
+  delay(100);
+  setAngle(3, 40);
+  delay(100);
+  setAngle(7, 30);
+  delay(200);
+
+  int expectedServos [][2] = { {0, 40}, {1, 30}, {2, 50}, {3, 25} };
+  incrementServo(4, expectedServos, 0, 1);
   delay(200);
 }
 
@@ -289,6 +313,9 @@ void serialEvent() {
     } else if (rawStr == "stop") {
       stopRobot();
       debugMsg("-- Robot Stopped --------------------------------");
+    } else if (rawStr == "backward") {
+      backwardRobot();
+      debugMsg("-- Robot Backward --------------------------------");
     } else {
       int servoID = getValue(rawStr, ' ', 0).toInt();
       int angle = getValue(rawStr, ' ', 1).toInt();
@@ -302,6 +329,8 @@ void serialEvent() {
 
 // Run once on setup
 void setup() {
+  pinMode(D0, OUTPUT);
+
   Serial.begin(9600);
 
   debugMsg("\n-- Setup --------------------------------");
@@ -310,12 +339,43 @@ void setup() {
   pwm.setPWMFreq(FREQUENCY);
 
   resetServos();
-  debugMsg("-- End of Setup ------------------------");
+  debugMsg("-- End of Setup --------------------------");
 }
 
 // Loop
 void loop() {
-  
+  if (movementCount == 0) {
+    digitalWrite(D0, HIGH);
+    delay(1000);
+    digitalWrite(D0, LOW);
+    startRobot();
+    movementCount++;
+  } else if (movementCount < 5) {
+    delay(300);
+    digitalWrite(D0, HIGH);
+    leftRobot();
+    movementCount++;
+    digitalWrite(D0, LOW);
+  } else if (movementCount < 10) {
+    delay(300);
+    digitalWrite(D0, HIGH);
+    forwardRobot();
+    movementCount++;
+    digitalWrite(D0, LOW);
+  } else if (movementCount < 15) {
+    delay(300);
+    digitalWrite(D0, HIGH);
+    rightRobot();
+    movementCount++;
+    digitalWrite(D0, LOW);
+  } else if (movementCount < 10) {
+    delay(300);
+    digitalWrite(D0, HIGH);
+    backwardRobot();
+    movementCount++;
+    digitalWrite(D0, LOW);
+  }
+
 }
 
 
