@@ -97,6 +97,8 @@ void incrementServo(int count, int expectedServos [][2], int speed, int incremen
 }
 
 void resetServos() {
+  debugMsg("-- Reset Servos --------------------------------");
+
   setAngle(4, 0);
   setAngle(5, 90);
   setAngle(6, 0);
@@ -118,6 +120,8 @@ void resetServos() {
 }
 
 void stopRobot() {
+  debugMsg("-- Robot Stop --------------------------------");
+
   int count = 4;
   int expectedServos [][2] = { {4, 0}, {5, 90}, {6, 0}, {7, 90} };
   incrementServo(count, expectedServos, 10);
@@ -138,6 +142,8 @@ void stopRobot() {
 }
 
 void startRobot() {
+  debugMsg("-- Robot Start --------------------------------");
+
   setAngle(0, 60);
   setAngle(1, 20);
   setAngle(2, 80);
@@ -159,6 +165,8 @@ void startRobot() {
 }
 
 void forwardRobot() {
+  debugMsg("-- Robot Forward --------------------------------");
+
   setAngle(4, 30);
   delay(100);
   setAngle(0, 20);
@@ -197,6 +205,8 @@ void forwardRobot() {
 }
 
 void backwardRobot() {
+  debugMsg("-- Robot Backward --------------------------------");
+
   setAngle(5, 60);
   delay(100);
   setAngle(1, 70);
@@ -235,6 +245,8 @@ void backwardRobot() {
 }
 
 void rightRobot() {
+  debugMsg("-- Robot Turn Right --------------------------------");
+
   setAngle(4, 30);
   delay(100);
   setAngle(0, 40);
@@ -269,6 +281,8 @@ void rightRobot() {
 }
 
 void leftRobot() {
+  debugMsg("-- Robot Turn Left --------------------------------");
+
   setAngle(4, 30);
   delay(100);
   setAngle(0, 60);
@@ -350,25 +364,31 @@ void loop() {
     digitalWrite(D0, LOW);
     startRobot();
     movementCount++;
-  } else if (movementCount < 5) {
-    delay(300);
-    digitalWrite(D0, HIGH);
-    leftRobot();
-    movementCount++;
-    digitalWrite(D0, LOW);
   } else if (movementCount < 10) {
     delay(300);
     digitalWrite(D0, HIGH);
     forwardRobot();
     movementCount++;
     digitalWrite(D0, LOW);
-  } else if (movementCount < 15) {
+  } else if (movementCount < 20) {
+    delay(300);
+    digitalWrite(D0, HIGH);
+    leftRobot();
+    movementCount++;
+    digitalWrite(D0, LOW);
+  } else if (movementCount < 30) {
+    delay(300);
+    digitalWrite(D0, HIGH);
+    forwardRobot();
+    movementCount++;
+    digitalWrite(D0, LOW);
+  } else if (movementCount < 40) {
     delay(300);
     digitalWrite(D0, HIGH);
     rightRobot();
     movementCount++;
     digitalWrite(D0, LOW);
-  } else if (movementCount < 10) {
+  } else if (movementCount < 50) {
     delay(300);
     digitalWrite(D0, HIGH);
     backwardRobot();
