@@ -1,5 +1,5 @@
 /*
----- PROJECT BIONIC v0.0 -------------------------------------------
+---- PROJECT BIONIC v1.0 -------------------------------------------
 -- Building a bionic robot from scratch
 -- Author: Asanka Sovis
 -- Created: 17/02/2023
