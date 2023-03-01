@@ -8,7 +8,7 @@
 
 Project Bionics intends to build a bio inspired robot that can mimic the nature. The design, based on the 3D models shared by [KILIC on PCBWay](https://www.pcbway.com/project/shareproject/Quadruped_Spider_Robot_3D_Printed_Parts_SG90_Servo_Motor_Arduino_Nano_10107fe3.html), can mimic the movement of a spider by using servos. The complete system is controlled by a NodeMCU and is powered by Li-ion battery which makes it portable. The robot can move to the front, back and can rotate to the left and right.
 
-## 🤖 Components Used
+## 🔌 Components Used
 
 > ![Components Used](https://user-images.githubusercontent.com/46389631/222161423-37f1ed7b-6798-4490-9a7f-bdc3e903d791.png)
 > 
@@ -23,7 +23,7 @@ Project Bionics intends to build a bio inspired robot that can mimic the nature.
 7. L7809 Voltage Regulator with Heat Sink (x1) - Regulate the voltage from 12V power supply to 9V for the BMS
 8. 3D Printed Body Parts - The body of the robot. These are based on the design provided by KILIC on PCBWay. These can be downloaded by [Quadruped Spider Robot](https://www.pcbway.com/project/shareproject/Quadruped_Spider_Robot_3D_Printed_Parts_SG90_Servo_Motor_Arduino_Nano_10107fe3.html)
 
-## 🤖 Architecture
+## 🏛️ Architecture
 
 > ![Architecture](https://user-images.githubusercontent.com/46389631/222175142-3cfedaac-7875-472b-9d22-04ca8db68520.png)
 >
